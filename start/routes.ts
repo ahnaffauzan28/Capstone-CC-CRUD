@@ -20,6 +20,13 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
+Route.get('/', async ({auth}) => {
+  await auth.use('api').authenticate()
+  if(auth.use('api').isLoggedIn){
+    return {hello: auth.use('api').user}
+  } 
 })
+
+Route.post('/login', 'AuthController.login')
+Route.post('/register', 'AuthController.register')
+Route.post('/logout', 'AuthController.logout')
